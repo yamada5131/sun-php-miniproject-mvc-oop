@@ -1,0 +1,27 @@
+services:
+  webserver: # naming
+    image: nginx:latest
+    ports:
+      - "8080:80" # HOST:CONTAINER
+    volumes: # specify volumes to share files between your computer and the container
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf #volumme for Nginx configuration
+      - ./app:/app # volume for the files to be served
+
+  php:
+    image: "myphp"
+    build: ./services/php
+    volumes:
+      - ./app/:/app
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "my_database"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysqldata: {}
